@@ -23,12 +23,52 @@ class FileTypes extends Model
         'updated_at' => 'datetime:d/m/Y',
     ];
 
-    /**
-     * Get the value of id
-     */
+    private $_EXTENSIONS;
+
     public function getId()
     {
         return $this->id;
+    }
+
+    public function getTitle()
+    {
+        return $this->title;
+    }
+
+    public function getDirectory()
+    {
+        return $this->directory;
+    }
+
+    public function files(): HasMany
+    {
+        return $this->hasMany(Files::class);
+    }
+
+    public function getExtensions()
+    {
+
+        foreach ($this->getExtensionsDecoded() as $key => $value) {
+            $plus = count($this->getExtensionsDecoded()) > ++$key ? ', ' : '';
+            $this->_EXTENSIONS .= $value->name . $plus;
+        }
+
+        return $this->_EXTENSIONS;
+    }
+
+    public function getExtensionsDecoded()
+    {
+        return json_decode($this->extensions);
+    }
+
+    public function getMaxFileSize()
+    {
+        return $this->max_file_size . ' Mb' ?? '';
+    }
+
+    public function getCreatedAt()
+    {
+        return $this->created_at;
     }
 
     /**
@@ -40,27 +80,11 @@ class FileTypes extends Model
     }
 
     /**
-     * Get the value of directory
-     */
-    public function getDirectory()
-    {
-        return $this->directory;
-    }
-
-    /**
      * Set the value of directory
      */
     public function setDirectory($directory): void
     {
         $this->directory = $directory;
-    }
-
-    /**
-     * Get the value of title
-     */
-    public function getTitle()
-    {
-        return $this->title;
     }
 
     /**
@@ -72,27 +96,11 @@ class FileTypes extends Model
     }
 
     /**
-     * Get the value of extensions
-     */
-    public function getExtensions()
-    {
-        return $this->extensions;
-    }
-
-    /**
      * Set the value of extensions
      */
     public function setExtensions($extensions): void
     {
         $this->extensions = $extensions;
-    }
-
-    /**
-     * Get the value of max_file_size
-     */
-    public function getMaxFileSize()
-    {
-        return $this->max_file_size;
     }
 
     /**
@@ -102,17 +110,4 @@ class FileTypes extends Model
     {
         $this->max_file_size = $max_file_size;
     }
-
-    public function files() {
-        return $this->hasMany(Files::class);
-    }
-
-    // public function getExtensionDecoded()
-    // {
-    //     foreach ($this->getExtensionsDecoded() as $key => $value) {
-    //         $plus = count($this->getExtensionsDecoded()) > ++$key ? ', ' : '';
-    //         $this->_EXTENSIONS .= $value->name . $plus;
-    //     }
-    //     return $this->_EXTENSIONS;
-    // }
 }

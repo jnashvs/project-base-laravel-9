@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers\Backoffice\Admin\FileManager;
 
+use App\Modules\Exceptions\ObjectNotFoundException;
+use App\Repositories\FileType\FileTypeRepositoryInterface;
 use Exception;
 use Flasher\Prime\FlasherInterface;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\FileTypes;
-use App\Repositories\Repository;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Session;
 use App\Http\Requests\Backoffice\SaveFileTypeRequest;
@@ -15,6 +16,8 @@ use Log;
 
 class FileTypesController extends Controller
 {
+    private FileTypeRepositoryInterface $fileTypeRepository;
+
     /**
      * Create a new controller instance.
      *
@@ -29,9 +32,9 @@ class FileTypesController extends Controller
 
     private $SUCESS_REMOVED = "Dados removido com sucesso";
 
-    public function __construct(FileTypes $model)
+    public function __construct(FileTypeRepositoryInterface $fileTypeRepository)
     {
-        $this->model = new Repository($model);
+        $this->fileTypeRepository = $fileTypeRepository;
     }
 
     /**
@@ -42,49 +45,55 @@ class FileTypesController extends Controller
 
     public function index()
     {
-        $fileTypes = $this->model->all();
+        $fileTypes = $this->fileTypeRepository->get();
 
         return view('backoffice.file-types.index', compact('fileTypes'));
     }
 
-    public function create()
+    public function show()
     {
         return view('backoffice.file-types.create');
     }
 
-    public function store(SaveFileTypeRequest $request, FlasherInterface $flasher)
+    public function create(SaveFileTypeRequest $request, FlasherInterface $flasher): FileTypes | bool
     {
         try {
             $data = $request->only('id', 'directory', 'title', 'extensions', 'max_file_size');
 
-            $dir_path = public_path() . "/files/{$request->input('directory')}/";
+            $data["extensions"] = $this->extensionJsonEncode($data["extensions"]);
 
-            if ($data['id'] == NULL) {
-                if ($data["extensions"])
-                    $data["extensions"] = json_encode($data["extensions"]);
+            return $this->fileTypeRepository->create($data["title"], $data["directory"], $data["extensions"], $data["max_file_size"]);
 
-                FileTypes::create($data);
-
-                if (!File::exists($dir_path)) {
-                    File::makeDirectory($dir_path, 0777, true, true);
-                    $flasher->addSuccess('File Type Created', 'File Types');
-                }
-
-            } else {
-                $oldFileType = FileTypes::find($data["id"]);
-                $old_dir_path = public_path() . "/files/{$oldFileType['directory']}/";
-                if (rename($old_dir_path, $dir_path)) {
-                    $oldFileType::update($data, $data['id']);
-                    $flasher->addSuccess('File Type Updated', 'File Types');
-                }
-            }
-
-            return response()->json(["success" => true]);
         } catch (Exception $th) {
             Log::info("File Types - " . $th->getMessage());
             return response()->json(["error" => $th->getMessage()]);
         }
 
+    }
+
+    public function update(SaveFileTypeRequest $request, int $id, FlasherInterface $flasher): FileTypes | bool
+    {
+        try {
+            $data = $request->only('id', 'directory', 'title', 'extensions', 'max_file_size');
+
+            $objFileType = $this->fileTypeRepository->getById($id);
+            if (!$objFileType) {
+                throw new ObjectNotFoundException('File Type can\'t be found');
+            }
+
+            $data["extensions"] = $this->extensionJsonEncode($data["extensions"]);
+
+            return $this->fileTypeRepository->update($objFileType, $data["title"], $data["directory"], $data["extensions"], $data["max_file_size"]);
+
+        } catch (Exception $th) {
+            Log::info("File Types - " . $th->getMessage());
+            return response()->json(["error" => $th->getMessage()]);
+        }
+
+    }
+
+    public function extensionJsonEncode($extensions) {
+        return $extensions ? json_encode($extensions) : null;
     }
 
     public function edit(FileTypes $filetypes, $id = null)
@@ -107,10 +116,7 @@ class FileTypesController extends Controller
 
     public function getFileType($slug)
     {
-
-        $res = $this->model->getModel()->where('directory', $slug)->first();
-
-        return response()->json($res);
+        return response()->json($slug);
     }
 
     public function delete(Request $request)

@@ -13,7 +13,13 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        $arrBindings = [
+            'App\Repositories\FileType\FileTypeRepositoryInterface' => 'App\Repositories\FileType\FileTypeRepository',
+        ];
+
+        foreach ($arrBindings as $interface => $module) {
+            $this->app->bind($interface, $module);
+        }
     }
 
     /**

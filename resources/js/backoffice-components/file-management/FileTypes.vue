@@ -109,8 +109,14 @@ export default {
     },
     onSubmit(){
       console.log(JSON.stringify(this.form));
+
+      let url = "/file-types/create";
+
+      if (this.form.id)
+        url = `/file-types/update/${this.form.id}`;
+
       axios
-        .post('/file-types/store', this.form)
+        .post(url, this.form)
         .then(function(response) {
           console.log(response)
         })
@@ -125,7 +131,7 @@ export default {
       this.form = this.emptyForm;
     }
   },
-  mounted(){
+  created(){
     if(this.data){
       this.form = JSON.parse(this.data);
     }

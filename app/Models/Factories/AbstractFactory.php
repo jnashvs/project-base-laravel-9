@@ -2,8 +2,6 @@
 
 namespace App\Models\Factories;
 
-use App\Modules\Exceptions\FatalModuleException;
-use App\Modules\Exceptions\FatalRepositoryException;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 
@@ -13,7 +11,7 @@ use Illuminate\Database\Eloquent\Model;
 abstract class AbstractFactory implements FactoryInterface
 {
 
-    public const REPO_NAMESPACE = "App\\Modules\\Repositories\\";
+    public const REPO_NAMESPACE = "App\\Repositories\\";
 
     /**
      * @var Model $model

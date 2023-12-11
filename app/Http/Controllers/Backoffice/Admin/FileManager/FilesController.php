@@ -6,7 +6,6 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Files;
 use App\Models\FileTypes;
-use App\Repositories\Repository;
 use App\Services\FilesManager;
 
 class FilesController extends Controller
@@ -20,9 +19,6 @@ class FilesController extends Controller
 
     public function __construct(FileTypes $filetypes, Files $files)
     {
-        // set the model
-        $this->filetypes = new Repository($filetypes);
-        $this->files = new Repository($files);
     }
 
     /**

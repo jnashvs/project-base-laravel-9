@@ -32,7 +32,8 @@ Route::group([
     });
 
     Route::controller(FileTypesController::class)->group(function () {
-        Route::post('/file-types/store', 'store')->name('file-types-store');
+        Route::post('/file-types/create', 'create')->name('api.filetypes.create');
+        Route::post('/file-types/update/{id}', 'update')->name('api.filetypes.update');
         Route::get('/file-types/all', 'getAll')->name('file-types-all');
         Route::get('/file-types/{id}', 'getFileType')->name('file-type-find');
     });

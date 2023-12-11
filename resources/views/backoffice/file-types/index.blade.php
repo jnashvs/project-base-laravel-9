@@ -24,7 +24,7 @@
                         <h6>File Types</h6>
                     </div>
                     <div class="col-6 text-end">
-                        <a class="btn bg-gradient-dark mb-0" href="{{ route('admin.create-file-types') }}"><i
+                        <a class="btn bg-gradient-dark mb-0" href="{{ route('admin.filetypes.show') }}"><i
                                 class="fas fa-plus"></i> Add File Types</a>
                     </div>
                 </div>
