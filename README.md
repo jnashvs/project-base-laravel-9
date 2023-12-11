@@ -63,3 +63,36 @@ Accept Single Role or Collection of Roles;
 ### Creative Tim - For The Open Source Theme (Soft UI).
 ### Leena Lavanya - From Codepen - For the Custom Error 403 Page.
 ### Swarup Kumar Kuila - From Codepen - For the Custom Error 404 Page.
+
+
+### ADDED BY ME ###
+
+## STEPS TO INSTALL THE PROJECT - RUN THE FOLLOWING COMMANDS STEP BY STEP
+
+<p> composer install </p>
+<p> npm install </p>
+<p> php artisan migrate </p>
+<p> php artisan db:seed </p>
+
+## PACOTES USADOS
+
+## install vue js 3 ##
+npm install --save vue@next && npm install --save-dev vue-loader@next
+## file upload unsing dropzone - vue3-dropzone
+https://www.npmjs.com/package/vue3-dropzone
+
+## install vue-datatable
+https://hc200ok.github.io/vue3-easy-data-table-doc/getting-started.html
+# manually change the version: "vue3-easy-data-table": "1.5.34"
+
+## vue js 3
+npm install --save vue3-dropzone
+## SEO PACKAGE
+https://github.com/artesaos/seotools
+## linkar a pasta files ao storage
+localmente: ln -s storage/files public/files/
+online server: 
+
+
+## start whole system on local env:
+inside laradock folder run: docker-compose up -d nginx mysql phpmyadmin workspace

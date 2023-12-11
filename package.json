@@ -18,6 +18,14 @@
         "postcss": "^8.1.14",
         "resolve-url-loader": "^5.0.0",
         "sass": "^1.32.11",
-        "sass-loader": "^11.0.1"
+        "sass-loader": "^11.0.1",
+        "vue-loader": "^17.3.1"
+    },
+    "dependencies": {
+        "vue": "^3.2.36",
+        "vue-easytable": "^2.27.1",
+        "vue3-dropzone": "^2.1.2",
+        "vue3-easy-data-table": "1.5.34",
+        "vue-multiselect": "3.0.0-alpha.2"
     }
 }
